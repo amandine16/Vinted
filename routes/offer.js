@@ -13,7 +13,6 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
     //Je stocke les infos de mon user
     const user = req.user;
-    console.log("publish");
     //Destructuring
     const {
       title,
