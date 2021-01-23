@@ -3,7 +3,7 @@ const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 // Permet d'activer les variables d'environnement qui se trouvent dans le fichier `.env`
-require("dotenv").congif();
+require("dotenv").config();
 //Le Cross-origin resource sharing est une sécurité activée par défaut qui permet à un serveur d'empêcher d'autres sites d'utiliser ses ressources (images, routes d'une API, etc.).
 //Le module cors permet d'autoriser ou non les demandes provenant de l'extérieur.
 const cors = require("cors");
