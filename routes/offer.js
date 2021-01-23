@@ -66,46 +66,46 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/offer/publish", isAuthenticated, async (req, res) => {
-  // route qui permet de poster une nouvelle annonce
-  try {
-    // Création de la nouvelle annonce (sans l'image)
-    const newOffer = new Offer({
-      product_name: req.fields.title,
-      product_description: req.fields.description,
-      product_price: req.fields.price,
-      product_details: [
-        { MARQUE: req.fields.brand },
-        { TAILLE: req.fields.size },
-        { ÉTAT: req.fields.condition },
-        { COULEUR: req.fields.color },
-        { EMPLACEMENT: req.fields.city },
-      ],
-      owner: req.user,
-    });
+// router.post("/offer/publish", isAuthenticated, async (req, res) => {
+//   // route qui permet de poster une nouvelle annonce
+//   try {
+//     // Création de la nouvelle annonce (sans l'image)
+//     const newOffer = new Offer({
+//       product_name: req.fields.title,
+//       product_description: req.fields.description,
+//       product_price: req.fields.price,
+//       product_details: [
+//         { MARQUE: req.fields.brand },
+//         { TAILLE: req.fields.size },
+//         { ÉTAT: req.fields.condition },
+//         { COULEUR: req.fields.color },
+//         { EMPLACEMENT: req.fields.city },
+//       ],
+//       owner: req.user,
+//     });
 
-    // Envoi de l'image à cloudinary
-    const result = await cloudinary.uploader.unsigned_upload(
-      req.files.picture.path,
-      "vinted_upload",
-      {
-        folder: `api/vinted/offers/${newOffer._id}`,
-        public_id: "preview",
-        cloud_name: "lereacteur",
-      }
-    );
+//     // Envoi de l'image à cloudinary
+//     const result = await cloudinary.uploader.unsigned_upload(
+//       req.files.picture.path,
+//       "vinted_upload",
+//       {
+//         folder: `api/vinted/offers/${newOffer._id}`,
+//         public_id: "preview",
+//         cloud_name: "lereacteur",
+//       }
+//     );
 
-    // ajout de l'image dans newOffer
-    newOffer.product_image = result;
+//     // ajout de l'image dans newOffer
+//     newOffer.product_image = result;
 
-    await newOffer.save();
+//     await newOffer.save();
 
-    res.json(newOffer);
-  } catch (error) {
-    console.log(error.message);
-    res.status(400).json({ message: error.message });
-  }
-});
+//     res.json(newOffer);
+//   } catch (error) {
+//     console.log(error.message);
+//     res.status(400).json({ message: error.message });
+//   }
+// });
 
 router.put("/offer/update/:id", isAuthenticated, async (req, res) => {
   const offerToModify = await Offer.findById(req.params.id);
