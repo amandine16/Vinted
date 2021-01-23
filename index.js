@@ -27,9 +27,11 @@ app.use(offerRoutes);
 
 //Configuration Cloudinary
 cloudinary.config({
-  cloud_name: "dagct9unm",
-  api_key: "384813578566235",
-  api_secret: "vwXkea0oLzr1_uHHK-qvrlWJn9w",
+  cloud_name: process.env.CLOUDINARY_CLOUR_NAME,
+
+  api_key: process.env.CLOUDINARY_API_KEY,
+
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 //Gestion des erreurs
 app.all("*", (req, res) => {
