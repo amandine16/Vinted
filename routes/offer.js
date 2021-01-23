@@ -160,7 +160,7 @@ router.put("/offer/update/:id", isAuthenticated, async (req, res) => {
 
     await offerToModify.save();
 
-    res.status(200).json("Offer modified succesfully !");
+    res.status(200).json(offerToModify);
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ error: error.message });
