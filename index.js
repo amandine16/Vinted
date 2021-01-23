@@ -12,7 +12,7 @@ const app = express();
 app.use(formidable());
 app.use(cors());
 
-//Initialisation de la bdd avec nom Vintedh
+//Initialisation de la bdd avec nom Vintedehtrht
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
