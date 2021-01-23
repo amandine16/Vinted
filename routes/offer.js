@@ -13,6 +13,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
     //Je stocke les infos de mon user
     const user = req.user;
+    console.log("publish");
     //Destructuring
     const {
       title,
@@ -52,13 +53,16 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
     //Avant de sauvergarder l'annonce, j'envoie mon image et crée le dossier nommé par l'id de l'offre
     const pictureToUpload = req.files.picture.path;
     const result = await cloudinary.uploader.upload(pictureToUpload, {
-      folder: `/vinted/offers/${newOffer._id}`,
+      folder: `api/vinted/offers/${newOffer._id}`,
     });
+    console.log(result);
+    console.log(newOffer);
     //Une fois l'image sauvergardée, j'ajoute les infos de l'image dans la clef product_image de ma bdd
     newOffer.product_image = result;
     //Je sauvegarde enfin mon offre complète
     await newOffer.save();
     //J'envoie ma réponse
+
     res.status(200).json(newOffer);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -142,8 +146,8 @@ router.put("/offer/update/:id", isAuthenticated, async (req, res) => {
         }
       }
       if (details[i].EMPLACEMENT) {
-        if (req.fields.location) {
-          details[i].EMPLACEMENT = req.fields.location;
+        if (req.fields.city) {
+          details[i].EMPLACEMENT = req.fields.city;
         }
       }
     }
@@ -153,14 +157,14 @@ router.put("/offer/update/:id", isAuthenticated, async (req, res) => {
 
     if (req.files.picture) {
       const result = await cloudinary.uploader.upload(req.files.picture.path, {
-        public_id: `api/vinted/offers/${offerToModify._id}`,
+        public_id: `api/vinted/offers/${offerToModify._id}/preview`,
       });
       offerToModify.product_image = result;
     }
 
     await offerToModify.save();
 
-    res.status(200).json(offerToModify);
+    res.status(200).json("Offer modified succesfully !");
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ error: error.message });
