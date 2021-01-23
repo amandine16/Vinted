@@ -1,0 +1,4 @@
+//Ici tu indiques quelles infos tu ne veux pas sauvegarder sur GITHUB
+node_modules
+.env
+.DS_Store
