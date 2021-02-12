@@ -8,7 +8,7 @@ const isAuthenticated = async (req, res, next) => {
       const token = req.headers.authorization.replace("Bearer ", "");
       //Je récupère les clefs du user visé par le token (+ l'id automatiquement)
       const user = await User.findOne({ token: token }).select(
-        "account email token"
+        "account _id email token"
       );
       if (user) {
         //J'ajoute une clef à req et y stocke mon user
