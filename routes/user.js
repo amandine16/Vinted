@@ -22,7 +22,7 @@ router.post("/user/signup/", async (req, res) => {
 
       //Etape 2 : Test si l'email existe déjà
       const user = await User.find({ email: req.fields.email });
-      if (user.length <= 0) {
+      if (!user) {
         // Etape 3 : Créer le nouvel utilisateur
         const newUser = new User({
           email: req.fields.email,
@@ -45,7 +45,7 @@ router.post("/user/signup/", async (req, res) => {
           },
         });
       } else {
-        res.status(400).json({
+        res.status(409).json({
           message: "Email already exists",
         });
       }
@@ -87,9 +87,10 @@ router.post("/user/login/", async (req, res) => {
         res.status(401).json({ message: "Unauthorized" });
       }
     } else {
-      res.status(401).json({ message: "Unauthorized" });
+      res.status(400).json({ message: "User not found" });
     }
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ error: error.message });
   }
 });
