@@ -20,8 +20,8 @@ router.post("/user/signup/", async (req, res) => {
       //Génrer un token
       const token = uid2(64);
 
-      //Etape 2 : Test si l'email existe déjà
-      const user = await User.find({ email: req.fields.email });
+      // //Etape 2 : Test si l'email existe déjà
+      // const user = await User.find({ email: req.fields.email });
       if (!user) {
         // Etape 3 : Créer le nouvel utilisateur
         const newUser = new User({
@@ -44,10 +44,10 @@ router.post("/user/signup/", async (req, res) => {
             phone: newUser.account.phone,
           },
         });
-      } else {
-        res.status(409).json({
-          message: "Email already exists",
-        });
+        // } else {
+        //   res.status(409).json({
+        //     message: "Email already exists",
+        //   });
       }
     } else {
       console.log(error.message);
