@@ -4,6 +4,9 @@ const router = express.Router();
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
+//sauvegarde de l'avatar
+const cloudinary = require("cloudinary").v2;
+
 //Importation des models
 const User = require("../models/User");
 
@@ -22,33 +25,32 @@ router.post("/user/signup/", async (req, res) => {
 
       // //Etape 2 : Test si l'email existe déjà
       // const user = await User.find({ email: req.fields.email });
-      if (!user) {
-        // Etape 3 : Créer le nouvel utilisateur
-        const newUser = new User({
-          email: req.fields.email,
-          account: {
-            username: req.fields.username,
-            phone: req.fields.phone,
-          },
-          token: token,
-          hash: hash,
-          salt: salt,
-        });
-        //Etape 4 : Sauvegarder le nouveau utilisateur
-        await newUser.save();
-        res.status(200).json({
-          _id: newUser._id,
-          token: newUser.token,
-          account: {
-            username: newUser.account.username,
-            phone: newUser.account.phone,
-          },
-        });
-        // } else {
-        //   res.status(409).json({
-        //     message: "Email already exists",
-        //   });
-      }
+      // if (!user) {
+      // Etape 3 : Créer le nouvel utilisateur
+      const newUser = new User({
+        email: req.fields.email,
+        account: {
+          username: req.fields.username,
+          phone: req.fields.phone,
+        },
+        token: token,
+        hash: hash,
+        salt: salt,
+      });
+      // AJOUT DE L'AVATAR
+      //Avant de sauvergarder l'annonce, j'envoie mon image et crée le dossier nommé par l'id de l'offre
+      const avatarToUpload = req.files.avatar.path;
+      console.log(req.files.avatar.path);
+      const result = await cloudinary.uploader.upload(avatarToUpload, {
+        folder: `api/vinted/offers/${newUser._id}`,
+      });
+      //Une fois l'image sauvegardée, j'ajoute les infos de l'image dans la clef account de mon user
+      newUser.account.avatar = result;
+      console.log(result);
+
+      //Etape 4 : Sauvegarder le nouveau utilisateur
+      await newUser.save();
+      res.status(200).json(newUser);
     } else {
       console.log(error.message);
       res.status(400).json({
