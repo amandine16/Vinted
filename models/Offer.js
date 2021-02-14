@@ -8,6 +8,7 @@ const Offer = mongoose.model("Offer", {
   // product_pictures: Array,
   // product_date: { type: Date, default: Date.now },
   product_image: { type: mongoose.Schema.Types.Mixed, default: {} },
+  product_pictures: Array,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

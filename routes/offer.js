@@ -13,7 +13,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
     //Je stocke les infos de mon user
     const user = req.user;
-    console.log("publish");
+    // console.log("publish");
     //Destructuring
     const {
       title,
@@ -49,16 +49,18 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       ],
       // Pour faire une réf je peux soit envoyer l'id, soit envoyer le document complet
       owner: user,
+      product_pictures: [],
     });
     //Avant de sauvergarder l'annonce, j'envoie mon image et crée le dossier nommé par l'id de l'offre
-    const pictureToUpload = req.files.picture.path;
-    const result = await cloudinary.uploader.upload(pictureToUpload, {
-      folder: `api/vinted/offers/${newOffer._id}`,
-    });
-    console.log(result);
-    console.log(newOffer);
-    //Une fois l'image sauvergardée, j'ajoute les infos de l'image dans la clef product_image de ma bdd
-    newOffer.product_image = result;
+    if (req.files.picture) {
+      const pictureToUpload = req.files.picture.path;
+      const result = await cloudinary.uploader.upload(pictureToUpload, {
+        folder: `api/vinted/offers/${newOffer._id}`,
+      });
+      //Une fois l'image sauvegardée, j'ajoute les infos de l'image dans la clef product_image de ma bdd
+      newOffer.product_image = result;
+    }
+
     //Je sauvegarde enfin mon offre complète
     await newOffer.save();
     //J'envoie ma réponse
