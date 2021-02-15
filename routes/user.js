@@ -39,14 +39,15 @@ router.post("/user/signup/", async (req, res) => {
       });
       // AJOUT DE L'AVATAR
       //Avant de sauvergarder l'annonce, j'envoie mon image et crée le dossier nommé par l'id de l'offre
-      const avatarToUpload = req.files.avatar.path;
-      console.log(req.files.avatar.path);
-      const result = await cloudinary.uploader.upload(avatarToUpload, {
-        folder: `api/vinted/offers/${newUser._id}`,
-      });
-      //Une fois l'image sauvegardée, j'ajoute les infos de l'image dans la clef account de mon user
-      newUser.account.avatar = result;
-      console.log(result);
+      // if(req.files)
+      // const avatarToUpload = req.files.avatar.path;
+      // console.log(req.files.avatar.path);
+      // const result = await cloudinary.uploader.upload(avatarToUpload, {
+      //   folder: `api/vinted/offers/${newUser._id}`,
+      // });
+      // //Une fois l'image sauvegardée, j'ajoute les infos de l'image dans la clef account de mon user
+      // newUser.account.avatar = result;
+      // console.log(result);
 
       //Etape 4 : Sauvegarder le nouveau utilisateur
       await newUser.save();
