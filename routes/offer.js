@@ -216,12 +216,12 @@ router.get("/offers", async (req, res) => {
       page = Number(req.query.page);
     }
     //Si limite n'existe pas
-    let limit;
-    if (limit) {
-      limit = Number(req.query.limit);
-    } else {
-      limit = 5;
-    }
+    let limit = Number(req.query.limit);
+    // if (limit) {
+    //   limit = Number(req.query.limit);
+    // } else {
+    //   limit = 5;
+    // }
     console.log(limit);
 
     const offers = await Offer.find(filters)
