@@ -8,6 +8,8 @@ const Offer = require("../models/Offer");
 const cloudinary = require("cloudinary").v2;
 //J'importe la fonction isAuthenticated dont j'ai besoin
 const isAuthenticated = require("../midlewares/isAuthenticated");
+// Package pour le paiement en ligne
+const stripe = require("stripe")(process.env.STRIPE_API_SECRET);
 
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
@@ -202,9 +204,9 @@ router.get("/offers", async (req, res) => {
     let sort = {};
 
     if (req.query.sort === "price-desc") {
-      sort = { product_price: -1 };
+      sort = { product_price: -1, _id: -1 };
     } else if (req.query.sort === "price-asc") {
-      sort = { product_price: 1 };
+      sort = { product_price: 1, _id: 1 };
     }
 
     let page;
@@ -222,7 +224,7 @@ router.get("/offers", async (req, res) => {
     // } else {
     //   limit = 5;
     // }
-    console.log(limit);
+    // console.log(limit);
 
     const offers = await Offer.find(filters)
       .populate({
@@ -232,9 +234,9 @@ router.get("/offers", async (req, res) => {
       .sort(sort)
       .skip((page - 1) * limit) // ignorer les x résultats
       .limit(limit); // renvoyer y résultats
-
     // cette ligne va nous retourner le nombre d'annonces trouvées en fonction des filtres
     const count = await Offer.countDocuments(filters);
+    console.log(offers);
 
     res.json({
       count: count,
@@ -271,6 +273,29 @@ router.delete("/offer/delete/:id", isAuthenticated, async (req, res) => {
 
     await offerToDelete.delete();
     res.status(200).json("Offer deleted successfully !");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post("/payment", async (req, res) => {
+  // Etape 1 : Je reçois un stripToken
+  const stripeToken = req.fields.stripeToken;
+  console.log(stripeToken);
+  try {
+    // Etape 2 : Envoyer ce stripToken à l'API Stripe
+    const response = await stripe.charges.create({
+      amount: 2000,
+      currency: "eur",
+      description: "la description du produit acheté",
+      source: stripeToken,
+    });
+    console.log(response);
+    // Etape 3 : Répondre au client
+    if (response.status === "succeeded") {
+      console.log("succeeded");
+      res.status(200).json("payment succeeded ! ");
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
