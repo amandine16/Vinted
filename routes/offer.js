@@ -290,6 +290,7 @@ router.post("/payment", async (req, res) => {
       description: "la description du produit acheté",
       source: stripeToken,
     });
+    console.log(response);
     // Etape 3 : Répondre au client
     if (response.status === "succeeded") {
       console.log("succeeded !!!!!!! ");
