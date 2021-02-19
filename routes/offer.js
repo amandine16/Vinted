@@ -279,15 +279,14 @@ router.delete("/offer/delete/:id", isAuthenticated, async (req, res) => {
 });
 
 router.post("/payment", async (req, res) => {
-  // Etape 1 : Je reçois un stripToken
-  const stripeToken = req.fields.stripeToken;
+  // Etape 1 : Je reçois les infos en body, dont le stripeToken
   try {
     // Etape 2 : Envoyer ce stripToken à l'API Stripe
     const response = await stripe.charges.create({
-      amount: 2000,
+      amount: req.fields.amount * 100,
       currency: "eur",
-      description: "la description du produit acheté",
-      source: stripeToken,
+      description: req.fields.title,
+      source: req.fields.token,
     });
     // Etape 3 : Répondre au client
     if (response.status === "succeeded") {
